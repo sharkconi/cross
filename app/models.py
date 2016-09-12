@@ -36,7 +36,6 @@ class Userlog(db.Model):
     __tablename__ = 'userlogs'
     id = db.Column(db.Integer, primary_key=True)
     interface = db.Column(db.String(8), index=True)
-    outip = db.Column(db.String(32))
     start = db.Column(db.DateTime)
     end = db.Column(db.DateTime)
     status = db.Column(db.String(8))

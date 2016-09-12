@@ -53,7 +53,7 @@ def admin_start_user_log():
     user = User.query.filter_by(name=request.form['user']).first()
     if user is None:
         return "ok", 404
-    userlog = Userlog(interface=request.form['interface'], outip=request.form['outip'], status="up",
+    userlog = Userlog(interface=request.form['interface'], status="up",
             start=datetime(start.year, start.month, start.day, start.hour, start.minute, start.second),
             end=datetime(start.year, start.month, start.day, 0, 0, 0), traffic=0, user_id=user.id)
     db.session.add(userlog)
@@ -63,13 +63,12 @@ def admin_start_user_log():
 @admin.route("/stopuserlog", methods=['POST'])
 def admin_stop_user_log():
     end = datetime.now()
-    user = User.query.filter_by(name=request.form['user']).first()
-    userlog = Userlog.query.filter_by(user_id=user.id).filter_by(interface=request.form["interface"]).filter_by(status='up').first()
-    if user is None or userlog is None:
+    userlog = Userlog.query.filter_by(interface=request.form["interface"]).filter_by(status='up').first()
+    if userlog is None:
         return "ok", 404
     userlog.end =  datetime(end.year, end.month, end.day, end.hour, end.minute, end.second)
     userlog.status = 'down'
-    userlog.traffic = 102400
+    userlog.traffic = int(request.form['traffic'])
     db.session.add(userlog)
     db.session.commit()
     return "ok", 200

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PATH=/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin
+export PATH
+
+PPP_IFACE="$1"
+PPP_PEERNAME="$2"
+PPP_USERNAME="$3"
+PPP_DEVNAME="$4"
+PPP_SPEED="$5"
+PPP_DATE=$(date)
+
+export PPP_IFACE PPP_PEERNAME PPP_USERNAME PPP_DEVNAME PPP_SPEED
+
+curl -X POST localhost:5000/admin/startuserlog -d "interface=$PPP_IFACE" -d "user=$PPP_PEERNAME"
+#echo "$PPP_IFACE $PPP_PEERNAME $PPP_USERNAME $PPP_DEVNAME $PPP_DATE uuth_up" >> /var/log/pppuser.log
