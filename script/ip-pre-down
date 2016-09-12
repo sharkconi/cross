@@ -10,6 +10,7 @@ PPP_SPEED="$3"
 PPP_LOCAL="$4"
 PPP_REMOTE="$5"
 PPP_IPPARAM="$6"
+PPP_DATE=$(date)
 export PPP_IFACE PPP_TTY PPP_SPEED PPP_LOCAL PPP_REMOTE PPP_IPPARAM
 
 rx=$(cat /sys/class/net/$PPP_IFACE/statistics/rx_bytes)
@@ -17,4 +18,5 @@ tx=$(cat /sys/class/net/$PPP_IFACE/statistics/tx_bytes)
 
 let rx=rx+tx
 
-curl -X POST localhost:5000/admin/stopuserlog -d "interface=$PPP_IFACE" -d "traffic=$rx"
+curl -X POST localhost/admin/stopuserlog -d "interface=$PPP_IFACE" -d "traffic=$rx"
+echo "$PPP_IFACE $PPP_TTY $rx $PPP_DATE ip-pre-down" >> /var/log/ippredown.log

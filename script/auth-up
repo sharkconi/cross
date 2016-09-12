@@ -12,5 +12,5 @@ PPP_DATE=$(date)
 
 export PPP_IFACE PPP_PEERNAME PPP_USERNAME PPP_DEVNAME PPP_SPEED
 
-curl -X POST localhost:5000/admin/startuserlog -d "interface=$PPP_IFACE" -d "user=$PPP_PEERNAME"
-#echo "$PPP_IFACE $PPP_PEERNAME $PPP_USERNAME $PPP_DEVNAME $PPP_DATE uuth_up" >> /var/log/pppuser.log
+curl -X POST localhost/admin/startuserlog -d "interface=$PPP_IFACE" -d "user=$PPP_PEERNAME"
+echo "$PPP_IFACE $PPP_PEERNAME $PPP_USERNAME $PPP_DEVNAME $PPP_DATE auth_up" >> /var/log/pppuser.log
