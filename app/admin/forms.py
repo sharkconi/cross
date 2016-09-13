@@ -17,6 +17,16 @@ class CreateUserForm(Form):
     submit = SubmitField("CreateUser")
 
 
+class DeactiveUserForm(Form):
+    name = StringField("Username:", validators = [Required(), Length(1, 32)])
+    submit = SubmitField("Deactive User")
+
+
+class ActiveUserForm(Form):
+    name = StringField("Username:", validators = [Required(), Length(1, 32)])
+    submit = SubmitField("Active User")
+
+
 class RenewfeeForm(Form):
     name = StringField("Username:", validators = [Required(), Length(1, 32)])
     renew = SelectField("Renew:", choices=[('1m', '1 month'), ('3m', '3 months'), ('6m', '6 months'), ('1y', '1 year')],
