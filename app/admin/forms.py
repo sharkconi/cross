@@ -24,6 +24,9 @@ class DeactiveUserForm(Form):
 
 class ActiveUserForm(Form):
     name = StringField("Username:", validators = [Required(), Length(1, 32)])
+    expired = SelectField("Expired:", choices=[('1m', '1 month'), ('3m', '3 months'), ('6m', '6 months'), ('1y', '1 year')],
+                   validators=[Required()])
+    package  = SelectField("Package:", choices=[], validators=[Required()])
     submit = SubmitField("Active User")
 
 
@@ -32,3 +35,10 @@ class RenewfeeForm(Form):
     renew = SelectField("Renew:", choices=[('1m', '1 month'), ('3m', '3 months'), ('6m', '6 months'), ('1y', '1 year')],
                  validators=[Required()])
     submit = SubmitField("RenewFee")
+
+
+class RenewTrafficForm(Form):
+    name = StringField("Username:", validators = [Required(), Length(1, 32)])
+    traffic = SelectField("Traffic:", choices=[('1024', '1GB'), ('2048', '2GB'), ('3072', '3GB'), ('4096', '4GB')],
+                   validators=[Required()])
+    submit = SubmitField("RenewTraffic")

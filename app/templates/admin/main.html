@@ -10,15 +10,20 @@
         <div class="col-lg-12 col-sm-12">
             <table class="table table-strip table-hover">
             <tr>
-                <th>ID</th><th>Name</th><th>Payday</th><th>Expired</th><th>Traffic</th>
+                <th>ID</th><th>Name</th><th>Status</th><th>Payday</th><th>Package</th><th>Expired</th>
             </tr>
             {%for user in users%}
+            {%if user.status == 'inactive'%}
+            <tr class="danger">
+            {%else%}
             <tr>
+            {%endif%}
                 <td>{{user.id}}</td>
                 <td>{{user.name}}</td>
+                <td>{{user.status}}</td>
                 <td>{{user.payday}}</td>
+                <td>{{user.package}} ({{user.package_traffic}} MB)</td>
                 <td>{{user.expired}} {{user.left}}</td>
-                <td>{{user.traffic}} Used</td>
             </tr>
             {%endfor%}
             </table>
