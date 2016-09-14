@@ -5,7 +5,7 @@
 from . import admin
 from .. import db
 from .forms import CreateUserForm, DeactiveUserForm, ActiveUserForm
-from .forms import RenewfeeForm, RenewPackageForm, RenewTrafficForm
+from .forms import RenewfeeForm, RenewTrafficForm
 from ..models import User, Userlog, Package, Usertraffic
 from flask import render_template, session, redirect, url_for, request
 from datetime import datetime
@@ -23,6 +23,10 @@ def get_period(payday):
 
 @admin.route("/")
 def admin_main():
+    return render_template("admin/main.html")
+
+@admin.route("/info/user")
+def admin_user_info():
      users = []
      for user in User.query.all():
          package = Package.query.filter_by(id=user.package_id).first()
@@ -37,10 +41,26 @@ def admin_main():
          else:
              users.append({"id":user.id, "name":user.name, "payday":user.payday, "package_traffic":package.traffic, \
                  "package":package.name, "expired":user.expired.strftime("%y-%m-%d"), "left":"","status":user.status})
-     return render_template("admin/main.html", users=users)
+     return render_template("admin/info/user.html", users=users)
 
 
-@admin.route("/renewfee", methods=['GET', 'POST'])
+@admin.route("/info/runtime")
+def admin_user_runtime():
+    runtimes = []
+    for user in User.query.all():
+        if user.status == 'active':
+            usertraffic = Usertraffic.query.filter_by(user_id=user.id).filter_by(period=get_period(user.payday)).first()
+            if usertraffic is None:
+                continue
+            runtimes.append({"name":user.name, "package_traffic":usertraffic.package_traffic, "expired":user.expired.strftime("%y-%m-%d"), \
+                "consume_traffic":usertraffic.consume_traffic/1024/1024, "period":usertraffic.period, "status":"active"})
+        else:
+            runtimes.append({"name":user.name, "package_traffic":0, "expird":user.expired.strftime("%y-%m-%d"), \
+                "consume_traffic":0, "period":"NA", "status":"inactive"})
+    return render_template("admin/info/runtime.html", runtimes=runtimes)
+ 
+
+@admin.route("/ops/renewfee", methods=['GET', 'POST'])
 def admin_renewfee_user():
     form = RenewfeeForm()
     if form.validate_on_submit():
@@ -74,10 +94,10 @@ def admin_renewfee_user():
         db.session.commit()
         return redirect(url_for("admin.admin_main"))
     else:
-        return render_template("admin/renewfee.html", form=form)
+        return render_template("admin/ops/renewfee.html", form=form)
 
 
-@admin.route("/renewtraffic", methods=['GET', 'POST'])
+@admin.route("/ops/renewtraffic", methods=['GET', 'POST'])
 def admin_renewtraffic_user():
     form = RenewTrafficForm()
     if form.validate_on_submit():
@@ -92,10 +112,10 @@ def admin_renewtraffic_user():
         db.session.commit()
         return redirect(url_for("admin.admin_main"))
     else:
-        return render_template("admin/renewtraffic.html", form=form)
+        return render_template("admin/ops/renewtraffic.html", form=form)
 
 
-@admin.route("/createuser", methods=['GET', 'POST'])
+@admin.route("/ops/createuser", methods=['GET', 'POST'])
 def admin_create_user():
     form = CreateUserForm()
     packages=[]
@@ -134,10 +154,10 @@ def admin_create_user():
             db.session.commit()
         return redirect(url_for("admin.admin_main"))
     else:
-        return render_template("admin/create_user.html", form=form)
+        return render_template("admin/ops/create_user.html", form=form)
 
 
-@admin.route("/deactiveuser", methods=['GET', 'POST'])
+@admin.route("/ops/deactiveuser", methods=['GET', 'POST'])
 def admin_deactive_user():
     form = DeactiveUserForm()
     if form.validate_on_submit():
@@ -152,10 +172,10 @@ def admin_deactive_user():
         db.session.commit()
         return redirect(url_for("admin.admin_main"))
     else:
-        return render_template("admin/deactive_user.html", form=form)
+        return render_template("admin/ops/deactive_user.html", form=form)
 
 
-@admin.route("/activeuser", methods=['POST', 'GET'])
+@admin.route("/ops/activeuser", methods=['POST', 'GET'])
 def admin_active_user():
     form = ActiveUserForm()
     packages=[]
@@ -195,7 +215,7 @@ def admin_active_user():
             db.session.commit()
         return redirect(url_for("admin.admin_main"))
     else:
-        return render_template("admin/active_user.html", form=form)
+        return render_template("admin/ops/active_user.html", form=form)
 
 @admin.route("/startuserlog", methods=['POST'])
 def admin_start_user_log():

@@ -1,0 +1,33 @@
+{% extends "admin_base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{%block content%}
+<br />
+<br />
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <table class="table table-strip table-hover">
+            <tr>
+                <th>ID</th><th>Name</th><th>Status</th><th>Payday</th><th>Package</th><th>Expired</th>
+            </tr>
+            {%for user in users%}
+            {%if user.status == 'inactive'%}
+            <tr class="danger">
+            {%else%}
+            <tr>
+            {%endif%}
+                <td>{{user.id}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.status}}</td>
+                <td>{{user.payday}}</td>
+                <td>{{user.package}} ({{user.package_traffic}} MB)</td>
+                <td>{{user.expired}} {{user.left}}</td>
+            </tr>
+            {%endfor%}
+            </table>
+        </div>
+    </div>
+</div>
+{%endblock%}
