@@ -10,7 +10,7 @@ from datetime import datetime
 from dateutil.relativedelta import *
 
 def get_period(payday):
-    d = datetime.utcnow()
+    d = datetime.now()
     if d.day < payday:
         d = d + relativedelta(months=-1)
         return datetime(d.year, d.month, payday, 0, 0, 0).strftime("%y-%m-%d")
@@ -19,7 +19,7 @@ def get_period(payday):
 
 
 @user.route("/<string:username>")
-def admin_main(username):
+def user_main(username):
     if username is None:
         return "error", 404
     user = User.query.filter_by(name=username).first()
@@ -31,7 +31,7 @@ def admin_main(username):
     if user.status == 'inactive':
         return "Sorry, Your service is out of date, you can renew your service"
 
-    info = {"name":user.name, "package":package.name, "package_traffic":package.traffic, "package_price":5, \
+    info = {"name":user.name, "package":package.name, "package_traffic":package.traffic, "package_price":5, "payday":user.payday, \
         "period_traffic":usertraffic.package_traffic, "progress":(usertraffic.consume_traffic/1024/1024)*100/usertraffic.package_traffic, \
         "lastperiod_traffic":usertraffic.last_traffic, "consume_traffic":usertraffic.consume_traffic/1024/1024, "expired":user.expired.strftime("%y-%m-%d")}
   

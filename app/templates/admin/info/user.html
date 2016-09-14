@@ -19,7 +19,7 @@
             <tr>
             {%endif%}
                 <td>{{user.id}}</td>
-                <td>{{user.name}}</td>
+                <td><a href="{{url_for('user.user_main', username=user.name)}}">{{user.name}}</a></td>
                 <td>{{user.status}}</td>
                 <td>{{user.payday}}</td>
                 <td>{{user.package}} ({{user.package_traffic}} MB)</td>

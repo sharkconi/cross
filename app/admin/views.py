@@ -48,7 +48,6 @@ def admin_user_info():
 def admin_user_runtime():
     runtimes = []
     for user in User.query.all():
-        print get_period(user.payday)
         if user.status == 'active':
             usertraffic = Usertraffic.query.filter_by(user_id=user.id).filter_by(period=get_period(user.payday)).first()
             if usertraffic is None:
@@ -58,7 +57,6 @@ def admin_user_runtime():
         else:
             runtimes.append({"name":user.name, "package_traffic":0, "expird":user.expired.strftime("%y-%m-%d"), \
                 "consume_traffic":0, "period":"NA", "status":"inactive"})
-    print runtimes
     return render_template("admin/info/runtime.html", runtimes=runtimes)
  
 
