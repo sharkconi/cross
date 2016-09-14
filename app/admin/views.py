@@ -13,7 +13,7 @@ from dateutil.relativedelta import *
 
 
 def get_period(payday):
-    d = datetime.utcnow()
+    d = datetime.now()
     if d.day < payday:
         d = d + relativedelta(months=-1)
         return datetime(d.year, d.month, payday, 0, 0, 0).strftime("%y-%m-%d")
@@ -32,10 +32,10 @@ def admin_user_info():
          package = Package.query.filter_by(id=user.package_id).first()
 
          if user.status == 'active':
-             if relativedelta(user.expired, datetime.utcnow()).months >= 1:
+             if relativedelta(user.expired, datetime.now()).months >= 1:
                  left = ""
              else:
-                 left = "({0} days left)".format(relativedelta(user.expired, datetime.utcnow()).days)
+                 left = "({0} days left)".format(relativedelta(user.expired, datetime.now()).days)
              users.append({"id":user.id, "name":user.name, "payday":user.payday, "package":package.name, "package_traffic":package.traffic, \
                  "expired":user.expired.strftime("%y-%m-%d"), "left":left, "status":user.status})
          else:
@@ -48,6 +48,7 @@ def admin_user_info():
 def admin_user_runtime():
     runtimes = []
     for user in User.query.all():
+        print get_period(user.payday)
         if user.status == 'active':
             usertraffic = Usertraffic.query.filter_by(user_id=user.id).filter_by(period=get_period(user.payday)).first()
             if usertraffic is None:
@@ -57,6 +58,7 @@ def admin_user_runtime():
         else:
             runtimes.append({"name":user.name, "package_traffic":0, "expird":user.expired.strftime("%y-%m-%d"), \
                 "consume_traffic":0, "period":"NA", "status":"inactive"})
+    print runtimes
     return render_template("admin/info/runtime.html", runtimes=runtimes)
  
 
@@ -142,7 +144,7 @@ def admin_create_user():
         else:
             pass
         user = User(name=form.name.data, password = form.password.data,
-             payday = int(datetime.utcnow().day),  package_id = int(form.package.data),
+             payday = int(datetime.now().day),  package_id = int(form.package.data),
             expired = datetime(expired.year, expired.month, expired.day, 0, 0, 0), status="active")
         db.session.add(user)
         db.session.commit()
@@ -200,7 +202,7 @@ def admin_active_user():
         else:
             pass
         user = User.query.filter_by(name=form.name.data).first()
-        user.payday = int(datetime.utcnow().day)
+        user.payday = int(datetime.now().day)
         user.package_id = int(form.package.data)
         user.expired = datetime(expired.year, expired.month, expired.day, 0, 0, 0)
         user.status = "active"

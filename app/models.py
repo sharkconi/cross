@@ -10,6 +10,7 @@ class Package(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, index=True)
     traffic = db.Column(db.Integer)
+    price = db.Column(db.Integer)
     maxshare = db.Column(db.Integer)
     users = db.relationship('User', backref='packages', lazy='dynamic')
 
