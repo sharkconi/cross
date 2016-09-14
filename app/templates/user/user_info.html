@@ -1,0 +1,32 @@
+{% extends "admin_base.html"%}
+
+{%block content%}
+<br />
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="page-header">
+  	        <h2>Welcome {{info.name}} <br /><small>Expired: {{info.expired}}</small></h2>
+	    </div>
+        </div>
+        <div class="col-lg-12 col-sm-12">
+            <table class="table table-default table-condensed">
+                <caption><h4>Package Info</h4></caption>
+                <tr><td>Package Name</td><td>{{info.package}}</td></tr>
+                <tr><td>Pacakge Traffic</td><td>{{info.package_traffic}} MB</td></tr>
+                <tr><td>Package Price</td><td>{{info.package_price}}<td></tr>
+            </table>
+        </div>
+        <div class="col-lg-12 col-sm-12">
+            <table class="table table-default table-condensed">
+                <caption><h4>Package Usage</h4></caption>
+                <tr><td>Package Total Traffic</td><td>{{info.period_traffic}}MB</td></tr>
+                <tr><td>Package Last Traffic</td><td>{{info.lastperiod_traffic}}MB</td></tr>
+                <tr><td>Pacakge Consume Traffic</td><td>{{info.consume_traffic}}MB</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
