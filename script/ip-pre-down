@@ -5,18 +5,15 @@ export PATH
 
 # These variables are for the use of the scripts run by run-parts
 PPP_IFACE="$1"
-PPP_TTY="$2"
-PPP_SPEED="$3"
-PPP_LOCAL="$4"
-PPP_REMOTE="$5"
-PPP_IPPARAM="$6"
+PPP_RX="$2"
+PPP_TX="$3"
 PPP_DATE=$(date)
-export PPP_IFACE PPP_TTY PPP_SPEED PPP_LOCAL PPP_REMOTE PPP_IPPARAM
+export PPP_IFACE
 
-rx=$(cat /sys/class/net/$PPP_IFACE/statistics/rx_bytes)
-tx=$(cat /sys/class/net/$PPP_IFACE/statistics/tx_bytes)
+#rx=$(cat /sys/class/net/$PPP_IFACE/statistics/rx_bytes)
+#tx=$(cat /sys/class/net/$PPP_IFACE/statistics/tx_bytes)
 
-let rx=rx+tx
+let PPP_RX=PPP_RX+PPP_TX
 
-curl -X POST localhost/admin/stopuserlog -d "interface=$PPP_IFACE" -d "traffic=$rx"
-echo "$PPP_IFACE $PPP_TTY $rx $PPP_DATE ip-pre-down" >> /var/log/ippredown.log
+curl -X POST http://147.178.202.19/admin/stopuserlog -d "interface=$PPP_IFACE" -d "traffic=$PPP_RX"
+echo "$PPP_IFACE $PPP_RX $PPP_DATE ip-pre-down" >> /var/log/ippredown.log
